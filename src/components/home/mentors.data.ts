@@ -3,7 +3,7 @@ import type { Mentor } from '@/interfaces/mentor'
 export const data: Array<Mentor> = [
   {
     id: 1,
-    photo: 'https://live.staticflickr.com/65535/52751345389_b7c9246b54_b.jpg',
+    photo: '/images/mentors/Best feeling in the world.png',
     name: 'The best feeling in the world',
     category: '',
     description:
@@ -15,7 +15,7 @@ export const data: Array<Mentor> = [
   },
   {
     id: 2,
-    photo: 'https://live.staticflickr.com/65535/52751345364_f9347c44f0_b.jpg',
+    photo: '/images/mentors/Playing it forward.png',
     name: 'Playing it forward',
     category: '',
     description:

@@ -12,9 +12,11 @@ import { db } from '../../firebase/initFirebas'
 import { collection, addDoc, getDoc, doc, setDoc, updateDoc } from 'firebase/firestore'
 import { ContentPasteGo } from '@mui/icons-material'
 import { DonateHeader, Header } from '@/components/header'
+import { Footer } from '@/components/footer'
 import PhoneIcon from '@mui/icons-material/Phone'
 import { useRouter } from 'next/router'
 import JSON5 from 'json5'
+import { v4 as uuidv4 } from 'uuid'
 
 ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement)
 
@@ -149,7 +151,7 @@ const Donate = () => {
   ])
 
   const [formData, setFormData] = useState({
-    id: 1,
+    id: uuidv4(),
     firstName: '',
     lastName: '',
     phone: '',
@@ -158,6 +160,91 @@ const Donate = () => {
     year: '',
     email: '',
   })
+
+  useEffect(() => {
+    const hash = window.location.hash.substr(1) // get the fragment identifier
+    const [encodedData, queryString] = hash.split('?') // split the hash into two parts
+
+    // decode the data from the first part
+
+    // get the value of the 'result' parameter from the second part
+    const params = new URLSearchParams(queryString)
+    const result = params.get('result')
+
+    // the object from the first part of the URL
+    if (result) {
+      const data = JSON.parse(atob(encodedData))
+
+      setFormData(data)
+      const paymentDetails = getPaymentDetails(result)
+      if (paymentDetails.status == 'success') {
+        const updateCharts = async () => {
+          // Get references to chart data documents
+          const chartOneDataRef = doc(db, 'chart_data_one', 'one')
+          const chartTwoDataRef = doc(db, 'chart_data_one', 'amount')
+          const chartThreeDataRef = doc(db, 'chart_data_one', 'progress')
+
+          // Fetch chart data documents from Firestore
+          const chartOneSnapshot = await getDoc(chartOneDataRef)
+          const chartOneData = chartOneSnapshot.data() as any
+
+          const chartTwoSnapshot = await getDoc(chartTwoDataRef)
+          const chartTwoData = chartTwoSnapshot.data() as any
+
+          const chartThreeSnapshot = await getDoc(chartThreeDataRef)
+          const chartThreeData = chartThreeSnapshot.data() as any
+
+          // Update chart data if it exists
+          if (chartOneData) {
+            const parsedChartData = chartOneData.one.map((item: any) => eval(`(${item})`))
+            const updatedChartData = parsedChartData.map((chart: any) => {
+              const updatedDatasets = chart.datasets.map((dataset: any) => {
+                if (dataset.label === data.program) {
+                  return {
+                    ...dataset,
+                    data: dataset.data.map((value: any, index: any) =>
+                      chart.labels[index] === data.year ? value + 1 : value
+                    ),
+                  }
+                }
+                return dataset
+              })
+              return { ...chart, datasets: updatedDatasets }
+            })
+            updateDoc(chartOneDataRef, { one: updatedChartData.map((item: any) => JSON.stringify(item)) })
+          }
+
+          if (chartTwoData) {
+            const sumAmount = parseInt(data.amount) + parseInt(chartTwoData.amount)
+            updateDoc(chartTwoDataRef, { amount: JSON.stringify(sumAmount) })
+          }
+
+          if (chartThreeData) {
+            const updatedProgress = parseInt(chartThreeData.progress) + 1
+            updateDoc(chartThreeDataRef, { progress: JSON.stringify(updatedProgress) })
+          }
+
+          addDoc(collection(db, 'user'), {
+            phoneNumber: data.phone,
+            amount: data.amount,
+            id: data.id,
+            firstName: data.firstName,
+            lastName: data.lastName,
+            phone: JSON.stringify(data.lastName),
+            program: data.program,
+            year: data.year,
+            email: data.email,
+          })
+        }
+        updateCharts()
+        router.push('/donate')
+        router.push('/success')
+      } else {
+        router.push('/failure')
+      }
+    } // the value of the 'result' parameter
+  }, [])
+
   useEffect(() => {
     const getPost = async () => {
       const postCol = doc(db, 'chart_data_one', 'one') as any
@@ -187,7 +274,7 @@ const Donate = () => {
     getPost().catch(console.error)
     getAmount().catch(console.error)
     getPercent().catch(console.error)
-  }, [])
+  })
 
   const options = {
     scales: {
@@ -218,68 +305,23 @@ const Donate = () => {
     e.preventDefault()
     const myNumberString = parseFloat(formData.amount.toString()).toFixed(2)
 
+    const dataStr = JSON.stringify(formData)
+    const dataB64 = btoa(dataStr)
+
     let payload = JSON.stringify({
       amount: parseFloat(myNumberString),
       PaymentTypeId: 'PTID#00041',
-      order_id: 1,
+      order_id: formData.id,
       first_name: formData.firstName,
       last_name: formData.lastName,
       email: formData.email,
       phone: formData.phone,
-      returnurl: 'https://fundraiser-theta.vercel.app/',
+      returnurl: `https://fundraiser-theta.vercel.app/donate#${dataB64}`,
     })
 
     const redirecrt = 'https://payments.ashoka.edu.in/dp/pg.aspx?value='.concat(Buffer.from(payload).toString('base64'))
     window.location.href = redirecrt
-
-    /*
-   
-    */
   }
-  useEffect(() => {
-    const queryParams = new URLSearchParams(window.location.search)
-    const result = queryParams.get('result')
-    if (result) {
-      const paymentDetails = getPaymentDetails(result)
-      if (paymentDetails.status == 'Success') {
-        const SuccessFunc = async () => {
-          const updatedChartData = chardData.map((chart: any) => {
-            const updatedDatasets = chart.datasets.map((dataset: any) => {
-              if (dataset.label === program) {
-                return {
-                  ...dataset,
-                  data: dataset.data.map((value: any, index: any) =>
-                    chart.labels[index] === year ? value + 1 : value
-                  ),
-                }
-              }
-              return dataset
-            })
-            return { ...chart, datasets: updatedDatasets }
-          })
-          setCummulativeAmount(parseInt(cummulativeAmount) + amount)
-          setChartData(updatedChartData)
-          setProgress(parseInt(progress) + 1)
-          try {
-            const chartDataRef = doc(db, 'chart_data_one', 'one')
-            const chartTwoDataRef = doc(db, 'chart_data_one', 'amount')
-            const chartThreeDataRef = doc(db, 'chart_data_one', 'progress')
-            await setDoc(chartDataRef, { one: updatedChartData.map((item: any) => JSON.stringify(item)) })
-            await setDoc(chartTwoDataRef, { amount: JSON.stringify(cummulativeAmount) })
-            await setDoc(chartThreeDataRef, { progress: JSON.stringify(progress) })
-          } catch (err) {
-            console.error(err)
-          }
-        }
-        SuccessFunc()
-        // redirect to success component
-        router.push('/success')
-      } else {
-        // redirect to failure component
-        router.push('/failure')
-      }
-    }
-  }, [])
 
   return (
     <>
@@ -304,7 +346,7 @@ const Donate = () => {
           sx={{ borderRadius: 10, height: `${5}vh` }}
         />
 
-        <span>₹{cummulativeAmount}</span>
+        <span>₹{parseInt(cummulativeAmount)}</span>
       </Box>
       <form onSubmit={(e) => handleSubmit(e)} style={{ display: 'block', marginTop: `${1}rem` }}>
         <div className="select_info">
@@ -403,7 +445,6 @@ const Donate = () => {
                 <MenuItem value={'2016'}>2016</MenuItem>
                 <MenuItem value={'2017'}>2017</MenuItem>
                 <MenuItem value={'2018'}>2018</MenuItem>
-                <MenuItem value={'2019'}>2019</MenuItem>
                 <MenuItem value={'2020'}>2020</MenuItem>
                 <MenuItem value={'2021'}>2021</MenuItem>
                 <MenuItem value={'2022'}>2022</MenuItem>
@@ -412,7 +453,7 @@ const Donate = () => {
           </div>
         </div>
         <div className="email_field">
-          <div className="input_width" style={{ width: `${70}%` }}>
+          <div className="email_width">
             <TextField
               label="Email"
               type="email"
@@ -438,6 +479,9 @@ const Donate = () => {
           </div>
         </div>
       </form>
+      <div style={{ marginTop: `${5}rem` }}>
+        <Footer />
+      </div>
     </>
   )
 }

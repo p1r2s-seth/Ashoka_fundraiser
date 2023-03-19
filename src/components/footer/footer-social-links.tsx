@@ -11,7 +11,7 @@ export const socialLinks: SocialLink[] = [
   },
   {
     name: 'Instagram',
-    link: 'https://www.instagram.com/ashokauniv/',
+    link: 'https://instagram.com/ashokaunivalumni?igshid=YmMyMTA2M2Y=',
     icon: '/images/icons/instagram.svg',
   },
   {

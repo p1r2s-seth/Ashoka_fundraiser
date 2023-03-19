@@ -30,10 +30,9 @@ const App: FC<AppPropsWithLayout> = (props: AppPropsWithLayout) => {
     <CacheProvider value={emotionCache}>
       <Head>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
-        <title>Ashoka University</title>
+        <title>Ashoka University: Leading Liberal Arts and Sciences University</title>
       </Head>
       <MUIProvider>
-        {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
         {getLayout(<Component {...pageProps} />)}
       </MUIProvider>

@@ -93,7 +93,7 @@ const HomeOurMentors: FC = () => {
     >
       <Container maxWidth="lg">
         <Typography variant="h1" sx={{ fontSize: 40 }}>
-          Give Now
+          Why Give Now
         </Typography>
 
         <Slider {...sliderConfig}>

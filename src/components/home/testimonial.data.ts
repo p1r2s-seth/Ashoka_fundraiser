@@ -8,7 +8,7 @@ export const data: Array<Testimonial> = [
       'Ashoka taught me how building a great eco-system can mobilize value. Visionary founders, exemplary faculty, and talented students create an N-square effect on the ecosystem. Giving back to Ashoka will catalyze this further and unlock value for talented individuals getting scholarships and taking risks that symbolizes the true spirit of entrepreneurship and change-makers.',
     user: {
       id: 1,
-      name: 'JaiRaj Bhattacharya',
+      name: 'Jairaj Bhattacharya',
       professional: "Founder and Managing Director, Convegenius, YIF'12 ",
       photo: 'Jairaj.jpg',
     },
@@ -22,7 +22,7 @@ export const data: Array<Testimonial> = [
       id: 1,
       name: 'Mahesh Jakhotia',
       professional: "Co-founder Bijak, YIF'12",
-      photo: 'Mahesh.jpg',
+      photo: 'Jairaj.jpg',
     },
   },
   // {

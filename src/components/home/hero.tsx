@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import Box from '@mui/material/Box'
@@ -11,8 +11,13 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow'
 import CountUp from 'react-countup'
 
 // import ReactPlayer from 'react-player/lazy'
-import Player from './player'
+import Player from './react-player'
+
 import { LinearProgress } from '@mui/material'
+
+import { db } from '../../../firebase/initFirebas'
+import { collection, addDoc, getDoc, doc, setDoc, updateDoc } from 'firebase/firestore'
+import VideoModal from '../videomodal/videomodal'
 
 interface Exp {
   label: string
@@ -39,6 +44,7 @@ const exps: Array<Exp> = [
 
 const ExpItem: FC<ExpItemProps> = ({ item }) => {
   const { value, label } = item
+
   return (
     <Box sx={{ textAlign: 'center', mb: { xs: 1, md: 0 } }}>
       <Typography
@@ -54,6 +60,30 @@ const ExpItem: FC<ExpItemProps> = ({ item }) => {
 }
 
 const HomeHero: FC = () => {
+  const [progress, setProgress] = useState<any>('0')
+  const [cummulativeAmount, setCummulativeAmount] = useState<any>('0')
+  const [openModal, setOpenModal] = useState(false)
+  useEffect(() => {
+    const getAmount = async () => {
+      const amountCol = doc(db, 'chart_data_one', 'amount') as any
+      const amountSnap = await getDoc(amountCol)
+      const fireamount = amountSnap.data() as any
+      // Set the result to the useState.
+      setCummulativeAmount(fireamount.amount)
+    }
+    const getPercent = async () => {
+      const progressCol = doc(db, 'chart_data_one', 'progress') as any
+      const progressSnap = await getDoc(progressCol)
+      const progressamount = progressSnap.data() as any
+      setProgress(progressamount.progress)
+      // Set the result to the useState.
+    }
+    // Call the async function.
+
+    getAmount().catch(console.error)
+    getPercent().catch(console.error)
+  }, [])
+  const handleClose = () => setOpenModal(false)
   return (
     <Box id="hero" sx={{ backgroundColor: 'background.paper', position: 'relative', pt: 4, pb: { xs: 8, md: 10 } }}>
       <Container maxWidth="lg">
@@ -154,21 +184,28 @@ const HomeHero: FC = () => {
                     Give Now
                   </StyledButton>
                 </Link>
-                <ScrollLink to="video-section" spy={true} smooth={true} offset={0} duration={350}>
-                  <StyledButton color="primary" size="large" variant="outlined" startIcon={<PlayArrowIcon />}>
-                    Watch Video
-                  </StyledButton>
-                </ScrollLink>
+
+                <StyledButton
+                  color="primary"
+                  size="large"
+                  variant="outlined"
+                  startIcon={<PlayArrowIcon />}
+                  onClick={() => {
+                    setOpenModal(!openModal)
+                  }}
+                >
+                  Watch Video
+                </StyledButton>
               </Box>
               <Box className="bar_home">
                 <LinearProgress
                   variant="determinate"
                   color="secondary"
-                  value={60}
+                  value={parseInt(progress)}
                   sx={{ borderRadius: 10, height: `${5}vh` }}
                 />
 
-                <span>${60}</span>
+                <span>₹{cummulativeAmount}</span>
               </Box>
             </Box>
           </Grid>
@@ -218,13 +255,15 @@ const HomeHero: FC = () => {
               </Box>
             </Box> */}
             <Box sx={{ lineHeight: 0 }}>
-              <Image src="/images/home-hero1.jpeg" width={775} height={787} alt="Hero img" />
+              <VideoModal open={openModal} onClose={handleClose} />
+
+              <Image src="/images/home-hero1.jpeg" width={570} height={450} alt="Hero img" />
             </Box>
           </Grid>
         </Grid>
 
         {/* Experience */}
-        <Box sx={{ boxShadow: 2, py: 4, px: 7, borderRadius: 4 }}>
+        {/* <Box sx={{ boxShadow: 2, py: 4, px: 7, borderRadius: 4 }}>
           <Grid container spacing={2}>
             {exps.map((item) => (
               <Grid key={item.value} item xs={12} md={4}>
@@ -232,7 +271,7 @@ const HomeHero: FC = () => {
               </Grid>
             ))}
           </Grid>
-        </Box>
+        </Box> */}
       </Container>
     </Box>
   )

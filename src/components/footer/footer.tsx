@@ -20,8 +20,7 @@ const Footer: FC = () => {
               </Typography>
               <Typography variant="subtitle1" sx={{ letterSpacing: 1, mb: 2 }}>
                 Ashoka University’s Liberal Arts and Sciences education enables critical thinking, complex problem
-                solving, effective communication, teamwork, and innovation for impact and change. The Ashoka University
-                education provides students with foundational…
+                solving, effective communication, teamwork, and innovation for impact and change.
               </Typography>
               <FooterSocialLinks />
             </Box>

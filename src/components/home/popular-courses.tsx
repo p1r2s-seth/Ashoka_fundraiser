@@ -101,8 +101,45 @@ const HomePopularCourse: FC = () => {
                 justifyContent: { xs: 'center', md: 'flex-start' },
               }}
             >
-              <Typography variant="h1" sx={{ mt: { xs: 0, md: -5 }, fontSize: { xs: 30, md: 48 } }}>
-                Most Popular Courses
+              {/* <Typography variant="h1" sx={{ mt: { xs: 0, md: -5 }, fontSize: { xs: 30, md: 48 } }}>
+                What Our Alumini Say
+              </Typography> */}
+              <Typography
+                component="h2"
+                sx={{
+                  position: 'relative',
+                  fontSize: { xs: 36, md: 46 },
+                  mt: { xs: 0, md: 7 },
+                  mb: 4,
+                  lineHeight: 1,
+                  fontWeight: 'bold',
+                }}
+              >
+                What Our{' '}
+                <Typography
+                  component="mark"
+                  sx={{
+                    position: 'relative',
+                    color: 'primary.main',
+                    fontSize: 'inherit',
+                    fontWeight: 'inherit',
+                    backgroundColor: 'unset',
+                  }}
+                >
+                  Alums{' '}
+                  <Box
+                    sx={{
+                      position: 'absolute',
+                      top: { xs: 20, md: 28 },
+                      left: 2,
+                      '& img': { width: { xs: 130, md: 175 }, height: 'auto' },
+                    }}
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src="/images/headline-curve.svg" alt="Headline curve" />
+                  </Box>
+                </Typography>
+                Say
               </Typography>
             </Box>
           </Grid>

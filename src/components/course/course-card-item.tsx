@@ -38,20 +38,29 @@ const CourseCardItem: FC<Props> = ({ item }) => {
         <Box
           sx={{
             lineHeight: 0,
-            overflow: 'hidden',
+            // overflow: 'hidden',
             borderRadius: 3,
-            mb: 2,
+            mb: 1,
           }}
         >
-          <Image src={item.cover} width={760} height={760} alt={'Course ' + item.id} />
+          <Image src={item.cover} width={570} height={500} alt={'Course ' + item.id} />
         </Box>
-        <Box sx={{ mb: 2 }}>
-          <Typography component="h2" variant="h5" sx={{ mb: 2, height: 56, overflow: 'hidden', fontSize: '1.2rem' }}>
+        <Box>
+          <Typography component="h2" variant="h5" sx={{ height: 56, fontSize: '1.5rem' }}>
             {item.title}
           </Typography>
         </Box>
-        <Box sx={{ mt: 1 }}>
-          <Typography component="h5" variant="h5" sx={{ mb: 2, height: 56, overflow: 'hidden', fontSize: '0.8rem' }}>
+        <Box>
+          <Typography
+            component="h6"
+            variant="h6"
+            sx={{ height: 56, fontSize: '0.8rem', color: 'primary.main', fontWeight: 'inherit' }}
+          >
+            {item.position}
+          </Typography>
+        </Box>
+        <Box>
+          <Typography component="h5" variant="h5" sx={{ mb: 2, height: 76, fontSize: '0.8rem', pb: 22 }}>
             {item.desc}
           </Typography>
         </Box>

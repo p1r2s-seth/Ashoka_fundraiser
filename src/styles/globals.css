@@ -89,9 +89,14 @@ body {
   height: 100%;
   display: grid;
   grid-template-columns: 33.3% 33.3% 33.4%;
+  margin-top: 3%;
 }
 .input_width {
   width: 30%;
+  margin-top: 1rem;
+}
+.email_width {
+  width: 70%;
   margin-top: 1rem;
 }
 .bar {
@@ -102,6 +107,7 @@ body {
 .bar_home {
   width: 50%;
   margin-top: 3rem;
+  margin-left: 0;
 }
 @media screen and (max-width: 480px) {
   .select_info {
@@ -120,5 +126,25 @@ body {
   .bar {
     margin-left: 2rem;
     width: 80%;
+  }
+  .email_field {
+    margin-left: 2rem;
+    width: 100%;
+  }
+  .email_width {
+    width: 80%;
+  }
+  .bar_home {
+    margin-left: 5rem;
+  }
+}
+
+@media screen and (min-width: 1400px) {
+  .email_width {
+    margin-left: 1.5rem;
+  }
+
+  .main_button {
+    margin-left: 22rem;
   }
 }

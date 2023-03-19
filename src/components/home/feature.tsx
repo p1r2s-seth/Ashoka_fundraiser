@@ -37,12 +37,12 @@ const BorderLinearProgress = styled(LinearProgress, {
 
 const HomeFeature: FC = () => {
   return (
-    <Box id="feature" sx={{ py: { xs: 10, md: 14 }, backgroundColor: 'background.paper' }}>
+    <Box id="feature" sx={{ backgroundColor: 'background.paper' }}>
       <Container>
         <Grid container spacing={3}>
           <Grid item xs={12} md={5}>
             <Box sx={{ position: 'relative' }}>
-              <Image src="/images/Pramath Raj Sinha.jpg" width={650} height={678} alt="Feature img" />
+              <Image src="/images/Pramath Raj Sinha.jpg" width={550} height={500} alt="Feature img" />
               {/* <Box
                 sx={{
                   position: 'absolute',
@@ -142,10 +142,10 @@ const HomeFeature: FC = () => {
           </Grid>
           <Grid item xs={12} md={7}>
             <Typography
-              component="h2"
+              component="h3"
               sx={{
                 position: 'relative',
-                fontSize: { xs: 40, md: 50 },
+                fontSize: { xs: 30, md: 40 },
                 ml: { xs: 0, md: 4 },
                 mt: 2,
                 mb: 3,
@@ -159,7 +159,7 @@ const HomeFeature: FC = () => {
                 sx={{
                   position: 'relative',
                   color: 'primary.main',
-                  fontSize: 'inherit',
+                  fontSize: { xs: 30, md: 40 },
                   fontWeight: 'inherit',
                   backgroundColor: 'unset',
                 }}
@@ -178,7 +178,10 @@ const HomeFeature: FC = () => {
                   {/* <img src="/images/headline-curve.svg" alt="Headline curve" /> */}
                 </Box>
               </Typography>
-              (Founder)
+              <Typography sx={{ mb: 0, mt: 0, fontSize: { xs: '1rem', md: '1.2rem' } }}>
+                {' '}
+                Chairperson, Board of Trustees, Ashoka University{' '}
+              </Typography>
             </Typography>
 
             <Typography sx={{ color: 'text.secondary', mb: 2, ml: { xs: 0, md: 4 } }}>
